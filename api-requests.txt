@@ -1,0 +1,25 @@
+/events
+	- all events with location info and attendants info
+	- link to each event details
+
+/event/<ID>
+	- venue
+	- location
+	- attendants
+
+/event/next
+	- Up and coming event
+	- venue information
+	- attendants
+ 
+/locations
+	- all locations
+	- link to a location 
+
+/location/<ID>
+	- details about each event held there
+	- links to each event
+
+/attendant/<twitterid>
+	- Event attended
+	- comments
