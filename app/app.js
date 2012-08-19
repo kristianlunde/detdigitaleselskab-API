@@ -2,31 +2,10 @@ var dds = require('./detdigitaleselskab'),
 	api = require('./api'),
 	http = require('http'),
 	url = require('url'),
-	jsonHttpResponse = require('./JsonHttpResponse');
-
-var config = {
-	database : {
-		host : 'localhost',
-		user : 'root',
-		password : '', 
-		database : 'detdigitaleselskab'
-	},
-	http : {
-		port : 8080
-	},
-	api : {
-		name : 'Det Digitale Selskab API',
-		version : '0.2',
-		endpoints : [
-			{url : '/event/next', method : 'GET', description : 'Get information about the up and coming event'},
-			{url : '/events', method : 'GET', description : 'List all events'},
-			{url : '/event/<ID>', method : 'GET', description :  'List information about an event, where <ID> is an integer value'},
-		]
-	}
-};
+	jsonHttpResponse = require('./JsonHttpResponse'),
+	config = require('./config');
 
 dds.connect(config.database);
-
 api.init(dds);
 
 http.createServer(function(request, response) {
@@ -42,6 +21,7 @@ http.createServer(function(request, response) {
 	var ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
 	dds.log(path, request.method, ip, request.headers);
 
+	//abort if the request method is something different than GET
 	if(request.method !== 'GET') {
 		return jsonHttpResponse.data({error : 'Method error! This api only accept GET requests'})
 							.respond();
@@ -51,7 +31,6 @@ http.createServer(function(request, response) {
 		config.api.endpoints.forEach(function(endpoint) {
 			endpoint.url = 'http://' + request.headers.host + endpoint.url;
 		});
-		
 		jsonHttpResponse.data(config.api)
 						.respond();
 
