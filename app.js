@@ -12,17 +12,16 @@ var config = {
 		database : 'detdigitaleselskab'
 	},
 	http : {
-		port : 8888
+		port : 8080
 	},
 	api : {
-		version : '0.1',
-		endpoints : {
-			'/event/next' : 'Get information about the up and coming event',
-			'/events' : 'List all events',
-			'/event/<ID>' : 'List information about an event',
-			'/locations' : 'List all locations',
-			'/location/<ID>' : 'List information about events held on a location',  
-		}
+		name : 'Det Digitale Selskab API',
+		version : '0.2',
+		endpoints : [
+			{url : '/event/next', method : 'GET', description : 'Get information about the up and coming event'},
+			{url : '/events', method : 'GET', description : 'List all events'},
+			{url : '/event/<ID>', method : 'GET', description :  'List information about an event, where <ID> is an integer value'},
+		]
 	}
 };
 
@@ -39,7 +38,20 @@ http.createServer(function(request, response) {
 
 	jsonHttpResponse.responseObject(response);
 
+	//Log request
+	var ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+	dds.log(path, request.method, ip, request.headers);
+
+	if(request.method !== 'GET') {
+		return jsonHttpResponse.data({error : 'Method error! This api only accept GET requests'})
+							.respond();
+	}
+
 	if(path === '/') {
+		config.api.endpoints.forEach(function(endpoint) {
+			endpoint.url = 'http://' + request.headers.host + endpoint.url;
+		});
+		
 		jsonHttpResponse.data(config.api)
 						.respond();
 
@@ -66,6 +78,4 @@ http.createServer(function(request, response) {
 						.respond();
 	}
 })
-.listen(config.http.port)
-.on('connection', function(stream) {
-});
+.listen(config.http.port);

@@ -5,13 +5,8 @@
 /event/<ID>
 	- venue
 	- location
-	- attendants
-
-/event/next
-	- Up and coming event
-	- venue information
-	- attendants
- 
+	- attendants count
+	- 
 /locations
 	- all locations
 	- link to a location 

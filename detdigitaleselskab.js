@@ -52,5 +52,21 @@ module.exports = {
 
 			return callback(rows);
 		});
+	},
+
+	log : function(url, method, ip, headers,  callback) {
+		var query = 'INSERT INTO api_log (`url`, `ip`, `method`, `headers`) VALUES ( ' +
+					this.connection.escape(url) + ', ' +
+					this.connection.escape(ip) + ', ' +
+					this.connection.escape(method) + ', ' +
+					this.connection.escape(JSON.stringify(headers)) + ');';
+	
+		this.connection.query(query, function(err, rows, fields) {
+			if(err) throw err;
+		});
+
+		if(callback !== undefined) {
+			return callback();
+		}
 	}
 };
