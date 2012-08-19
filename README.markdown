@@ -7,6 +7,8 @@ Url to the site: http://det.digitaleselskab.org
 
 The API has not been deployed to the live environment yet.
 
+This code has mainly been created as a learning experience to get to know nodejs better.
+
 Installation
 ------------
 
@@ -19,3 +21,4 @@ Installation
 5. navigate to the checkout directory
 6. run: 
 	- node app.js
+
