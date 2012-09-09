@@ -1,0 +1,9 @@
+{
+	"name" : "detdigitaleselskab-API",
+	"description" : "An API to access the Det digitale Selskab data", 
+	"version" : "0.0.3",
+	"private" : true, 
+	"dependencies" : {
+		"mysql" : "2.0.0-alpha3"
+	}																					       
+}

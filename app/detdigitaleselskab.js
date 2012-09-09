@@ -10,7 +10,7 @@ module.exports = {
 
 	},
 
-	end : function() {
+	disconnect : function() {
 		this.connection.end();
 	},
 

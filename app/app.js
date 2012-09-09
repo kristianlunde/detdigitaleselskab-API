@@ -5,10 +5,10 @@ var dds = require('./detdigitaleselskab'),
 	jsonHttpResponse = require('./JsonHttpResponse'),
 	config = require('./config');
 
-dds.connect(config.database);
 api.init(dds);
 
 http.createServer(function(request, response) {
+	dds.connect(config.database);
 	response.writeHeader(200, {"Content-Type": "application/json"});  
 	var uri = url.parse(request.url);
 	var path = uri.pathname;
@@ -28,9 +28,6 @@ http.createServer(function(request, response) {
 	}
 
 	if(path === '/') {
-		config.api.endpoints.forEach(function(endpoint) {
-			endpoint.url = 'http://' + request.headers.host + endpoint.url;
-		});
 		jsonHttpResponse.data(config.api)
 						.respond();
 
@@ -56,5 +53,11 @@ http.createServer(function(request, response) {
 						.statusCode(404)
 						.respond();
 	}
+	dds.disconnect();
 })
-.listen(config.http.port);
+.listen(config.http.port, config.http.vhost, function(){
+	console.log('server running on ' + config.http.vhost + ':' + config.http.port);
+})
+.on('error', function(exception) {
+	console.log(exception);
+});
