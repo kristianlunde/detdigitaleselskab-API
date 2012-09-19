@@ -19,8 +19,9 @@ http.createServer(function(request, response) {
 
 	//Log request
 	var ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
-	dds.log(path, request.method, ip, request.headers);
-
+	if(path !== '/favicon.ico') {
+		dds.log(path, request.method, ip, request.headers);
+	}
 	//abort if the request method is something different than GET
 	if(request.method !== 'GET') {
 		return jsonHttpResponse.data({error : 'Method error! This api only accept GET requests'})
