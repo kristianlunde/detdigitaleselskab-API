@@ -7,9 +7,31 @@ module.exports = {
 	connect : function(config) {
 	
 		this.connection = mysql.createConnection(config);
+		this.handleDisconnect(this.connection);
+		this.connection.on('error', function() {
+		});
 
 	},
 
+	handleDisconnect : function(connection) {
+		var me = this;
+		connection.on('error', function(err) {
+	    	if (!err.fatal) {
+		    	return;
+			}
+
+			if (err.code !== 'PROTOCOL_CONNECTION_LOST') {
+				throw err;
+			}
+
+			console.log('Re-connecting lost connection: ' + err.stack);
+
+			connection = mysql.createConnection(connection.config);
+			me.handleDisconnect(connection);
+			connection.connect();
+		});
+	},
+												
 	disconnect : function() {
 		this.connection.end();
 	},
