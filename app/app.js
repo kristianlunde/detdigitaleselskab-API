@@ -8,15 +8,23 @@ var dds = require('./detdigitaleselskab'),
 api.init(dds);
 
 http.createServer(function(request, response) {
-	dds.connect(config.database);
 	response.writeHeader(200, {"Content-Type": "application/json"});  
 	var uri = url.parse(request.url);
 	var path = uri.pathname;
 	var eventPattern = new RegExp(/^\/event\/[0-9]+$/)
 	var intPattern = new RegExp(/[0-9]+$/);
 
+	if(path === '/favicon.ico') {
+		response.writeHeader(200, {'Content-Type' : 'image/x-icon'});
+		response.end();
+		return false;
+	}
+
 	jsonHttpResponse.responseObject(response);
 
+	dds.connect(config.database);
+	
+	
 	//Log request
 	var ip = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
 	if(path !== '/favicon.ico') {
